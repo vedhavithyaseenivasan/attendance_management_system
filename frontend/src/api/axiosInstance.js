@@ -5,7 +5,6 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-
 //Request interceptor (attach token)
 axiosInstance.interceptors.request.use(
   (config) => {

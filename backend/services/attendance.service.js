@@ -91,17 +91,20 @@ const markAttendance = async (
 const getAttendance = async (user, month, year, selfOnly = false) => {
   let userIds = [];
 
-  if (selfOnly) {
+  if(selfOnly){
     userIds = [user.id];
-  } else {
-    if (user.role === Roles.TEAM_MEMBER) {
+  }
+  else{
+    if(user.role === Roles.TEAM_MEMBER){
       userIds = [user.id];
-    } else if (user.role === Roles.LEAD) {
+    }
+    else if(user.role === Roles.LEAD){
       const members = await User.findAll({
         where: { reporting_to: user.id },
       });
       userIds = [user.id, ...members.map((u) => u.id)];
-    } else if (user.role === Roles.MANAGER) {
+    }
+    else if(user.role === Roles.MANAGER){
       const leads = await User.findAll({
         where: { reporting_to: user.id, role: Roles.LEAD },
       });
@@ -119,7 +122,8 @@ const getAttendance = async (user, month, year, selfOnly = false) => {
         ...leadIds,
         ...teamMembers.map((tm) => tm.id),
       ];
-    } else if (user.role === Roles.HR) {
+    }
+    else if(user.role === Roles.HR){
       const allUsers = await User.findAll({
         attributes: ["id"],
       });

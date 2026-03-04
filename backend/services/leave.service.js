@@ -61,7 +61,8 @@ exports.getTeamLeaves = async (user) => {
   if (user.role === Roles.LEAD) {
     const members = await User.findAll({ where: { reporting_to: user.id } });
     userIds = members.map(u => u.id);
-  }else if (user.role === Roles.MANAGER) {
+  }
+  else if (user.role === Roles.MANAGER) {
   
   const leads = await User.findAll({ where: { role: Roles.LEAD, reporting_to: user.id } });
   const leadIds = leads.map(u => u.id);
@@ -76,10 +77,12 @@ exports.getTeamLeaves = async (user) => {
     ...leads.map(u => u.id),
     ...membersUnderLeads.map(u => u.id),
   ];
-} else if (user.role === Roles.HR) {
+ }
+ else if (user.role === Roles.HR) {
     const allUsers = await User.findAll({ attributes: ["id"] });
     userIds = allUsers.map(u => u.id);
-  } else {
+  }
+  else {
     const error = new Error("Access denied");
     error.status = 403;
     throw error;

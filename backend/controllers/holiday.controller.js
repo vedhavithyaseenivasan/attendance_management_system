@@ -12,7 +12,9 @@ exports.addHoliday = async (req, res) => {
       holiday
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      message: error.message 
+    });
   }
 };
 
@@ -23,9 +25,14 @@ exports.getHolidays = async (req, res) => {
 
     const holidays = await holidayService.getHolidays(month, year);
 
-    res.status(200).json({ success: true, data: holidays });
+    res.status(200).json({ 
+      success: true,
+      data: holidays
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      message: error.message 
+    });
   }
 };
 

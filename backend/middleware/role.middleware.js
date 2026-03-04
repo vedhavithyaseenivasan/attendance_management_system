@@ -1,4 +1,3 @@
-//Role middleware
 module.exports = function(allowedRoles) {
   return (req, res, next) => {
     if (!req.user) {
