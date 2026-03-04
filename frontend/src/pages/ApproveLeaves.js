@@ -132,7 +132,6 @@ const ApproveLeaves = () => {
   <TableCell sx={{ color: "white", fontWeight: "bold" }}>To</TableCell>
   <TableCell sx={{ color: "white", fontWeight: "bold" }}>Type</TableCell>
   <TableCell sx={{ color: "white", fontWeight: "bold" }}>Reason</TableCell>
-  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Status</TableCell>
   <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
 </TableRow>
           </TableHead>
@@ -144,7 +143,6 @@ const ApproveLeaves = () => {
                 <TableCell>{new Date(l.to_date).toLocaleDateString()}</TableCell>
                 <TableCell>{l.leave_type}</TableCell>
                 <TableCell>{l.reason}</TableCell>
-                <TableCell>{l.status}</TableCell>
                 <TableCell>
                   {(userRole === "LEAD" || userRole === "MANAGER") && (
                     <>
@@ -154,7 +152,7 @@ const ApproveLeaves = () => {
                         size="small"
                         onClick={() => handleStatusChange(l.id, "APPROVED")}
                         disabled={updatingId === l.id}
-                        sx={{ mr: 1 }}
+                        sx={{ mr: 4 }}
                       >
                         Approve
                       </Button>

@@ -95,9 +95,8 @@ exports.getTeamLeaves = async (user) => {
   });
 };
 
-//UPDATE LEAVE STATUS
+// UPDATE LEAVE STATUS
 exports.updateLeaveStatus = async (user, leaveId, status) => {
-
   if (![Roles.LEAD, Roles.MANAGER].includes(user.role)) {
     const error = new Error("Only Lead or Manager can approve/reject leaves");
     error.status = 403;
@@ -119,38 +118,55 @@ exports.updateLeaveStatus = async (user, leaveId, status) => {
 
   const leaveUser = leave.User;
 
-  //Hierarchy checks
+  // Hierarchy checks
   if (user.role === Roles.LEAD) {
     if (leaveUser.reporting_to !== user.id || leaveUser.role !== Roles.TEAM_MEMBER) {
       const error = new Error("Lead can approve only their team members' leaves");
       error.status = 403;
       throw error;
     }
+  } else if (user.role === Roles.MANAGER) {
+    const leads = await User.findAll({ where: { role: Roles.LEAD, reporting_to: user.id } });
+    const leadIds = leads.map(l => l.id);
+
+    const membersUnderLeads = await User.findAll({ where: { reporting_to: { [Op.in]: leadIds } } });
+    const memberIdsUnderLeads = membersUnderLeads.map(m => m.id);
+
+    const allowedUserIds = [
+      ...memberIdsUnderLeads,
+      ...leadIds,
+      ...(await User.findAll({ where: { reporting_to: user.id } })).map(u => u.id),
+    ];
+
+    if (!allowedUserIds.includes(leaveUser.id)) {
+      const error = new Error("Manager can approve only their leads or team members");
+      error.status = 403;
+      throw error;
+    }
   }
-  
-  else if (user.role === Roles.MANAGER) {
-  const leads = await User.findAll({ where: { role: Roles.LEAD, reporting_to: user.id } });
-  const leadIds = leads.map(l => l.id);
 
-  const membersUnderLeads = await User.findAll({ where: { reporting_to: { [Op.in]: leadIds } } });
-  const memberIdsUnderLeads = membersUnderLeads.map(m => m.id);
-
-  const allowedUserIds = [
-    ...memberIdsUnderLeads,
-    ...leadIds,
-    ...(await User.findAll({ where: { reporting_to: user.id } })).map(u => u.id),
-  ];
-
-  if (!allowedUserIds.includes(leaveUser.id)) {
-    const error = new Error("Manager can approve only their leads or team members");
-    error.status = 403;
-    throw error;
-  }
-}
+  // Update leave status
   leave.status = status;
   leave.approved_by = user.id;
   leave.approved_at = new Date();
   await leave.save();
+
+  //Auto mark attendance as ABSENT for approved leave
+  if (status === LeaveStatus.APPROVED) {
+    const { markAttendance } = require("./attendance.service"); // import here
+    const startDate = new Date(leave.from_date);
+    const endDate = new Date(leave.to_date);
+
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      await markAttendance(leaveUser, {
+        user_id: leaveUser.id,
+        date: d.toISOString().split("T")[0],
+        status: "ABSENT",
+        check_in_time: null,
+        check_out_time: null,
+      });
+    }
+  }
 
   await logAction({
     userId: leaveUser.id,
@@ -163,53 +179,36 @@ exports.updateLeaveStatus = async (user, leaveId, status) => {
   return { message: `Leave ${status} successfully`, leave };
 };
 
+// DELETE LEAVE
+exports.deleteLeave = async (user, leaveId) => {
+  const leave = await LeaveRequest.findByPk(leaveId);
+  if (!leave) {
+    const error = new Error("Leave not found");
+    error.status = 404;
+    throw error;
+  }
 
+  if (leave.user_id !== user.id) {
+    const error = new Error("You can delete only your leave");
+    error.status = 403;
+    throw error;
+  }
 
+  if (leave.status !== LeaveStatus.APPLIED) {
+    const error = new Error("Only applied leave can be deleted");
+    error.status = 400;
+    throw error;
+  }
 
+  await leave.destroy();
 
+  await logAction({
+    userId: user.id,
+    action: "DELETE",
+    entityType: "Leave_Request",
+    entityId: leave.id,
+    performedBy: user.id,
+  });
 
-
-
-
-
-
-
-
-
-
-
-
-
-// // DELETE LEAVE
-// exports.deleteLeave = async (user, leaveId) => {
-//   const leave = await LeaveRequest.findByPk(leaveId);
-//   if (!leave) {
-//     const error = new Error("Leave not found");
-//     error.status = 404;
-//     throw error;
-//   }
-
-//   if (leave.user_id !== user.id) {
-//     const error = new Error("You can delete only your leave");
-//     error.status = 403;
-//     throw error;
-//   }
-
-//   if (leave.status !== LeaveStatus.APPLIED) {
-//     const error = new Error("Only applied leave can be deleted");
-//     error.status = 400;
-//     throw error;
-//   }
-
-//   await leave.destroy();
-
-//   await logAction({
-//     userId: user.id,
-//     action: "DELETE",
-//     entityType: "Leave_Request",
-//     entityId: leave.id,
-//     performedBy: user.id,
-//   });
-
-//   return { message: "Leave deleted successfully" };
-// };
+  return { message: "Leave deleted successfully" };
+};

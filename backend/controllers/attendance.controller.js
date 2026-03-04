@@ -58,4 +58,37 @@ const getAttendance = async (req, res) => {
   }
 };
 
-module.exports = { markAttendance, getAttendance };
+// Update Attendance (HR)
+const updateAttendance = async (req, res) => {
+  try {
+    if (req.user.role !== "HR") {
+      return res.status(403).json({
+        success: false,
+        message: "Only HR can update attendance",
+      });
+    }
+
+    const { user_id, date, status, check_in_time, check_out_time } = req.body;
+
+    const result = await attendanceService.markAttendance(req.user, {
+      user_id,
+      date,
+      status,
+      check_in_time,
+      check_out_time,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Attendance updated successfully",
+      data: result,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { markAttendance, getAttendance, updateAttendance};

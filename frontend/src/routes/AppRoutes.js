@@ -7,6 +7,7 @@ import ChangePassword from "../pages/ChangePassword";
 import MyAttendance from "../pages/MyAttendance"; 
 import MarkAttendance from "../pages/MarkAttendance";
 import TeamAttendance  from "../pages/TeamAttendance";
+import UpdateAttendance from "../pages/UpdateAttendance";
 
 //Holiday pages
 import Holiday from "../pages/Holidays";
@@ -65,7 +66,14 @@ const AppRoutes = () => {
     </ProtectedRoute>
   }
 />
-
+<Route
+  path="/update-attendance"
+  element={
+    <ProtectedRoute roles={["HR"]}>
+      <UpdateAttendance />
+    </ProtectedRoute>
+  }
+/>
         <Route
           path="/leave/apply"
           element={

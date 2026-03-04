@@ -49,24 +49,14 @@ exports.updateLeaveStatus = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// //Delete leave
-// exports.deleteLeave = async (user, leaveId) => {
-//   //Calls service function directly
-//   return await leaveService.deleteLeave(user, leaveId);
-// };
+//Delete Applied Leave
+exports.deleteLeave = async (req, res) => {
+  try {
+    const user = req.user;
+    const leaveId = req.params.id;
+    const result = await leaveService.deleteLeave(user, leaveId);
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ message: err.message });
+  }
+};

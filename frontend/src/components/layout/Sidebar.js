@@ -39,6 +39,7 @@ const Sidebar = () => {
   if (user.role === "HR") {
     menuItems.push({ name: "Users", path: "/users" });
     menuItems.push({ name: "Mark Attendance", path: "/attendance" });
+    menuItems.push({name:"Update Attendance", path: "/update-attendance"});
     menuItems.push({ name: "Add Holiday", path: "/holiday/add" });
     menuItems.push({ name: "Team Attendance", path: "/team-attendance" });
   }

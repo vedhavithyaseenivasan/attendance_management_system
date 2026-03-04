@@ -9,6 +9,9 @@ const { Roles } = require("../constants/constants");
 //Apply leave
 router.post("/apply", authenticate, leaveController.applyLeave);
 
+//Delete leave
+router.delete("/:id", authenticate, leaveController.deleteLeave);
+
 //View own leaves
 router.get("/my-leaves", authenticate, leaveController.getMyLeaves);
 
