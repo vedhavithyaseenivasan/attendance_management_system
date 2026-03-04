@@ -14,6 +14,9 @@ import {
   Paper,
 } from "@mui/material";
 
+
+const {Attendance} = require("../constant/constant");
+
 const MarkAttendance = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
@@ -45,7 +48,7 @@ const MarkAttendance = () => {
       return;
     }
 
-    if (status === "PRESENT" && (!checkInTime || !checkOutTime)) {
+    if (status === Attendance.PRESENT && (!checkInTime || !checkOutTime)) {
       setMessage("Please provide check-in and check-out times for Present status");
       return;
     }
@@ -156,7 +159,7 @@ const MarkAttendance = () => {
           </Select>
         </FormControl>
         
-        {status === "PRESENT" && (
+        {status === Attendance.PRESENT && (
           <>
             <TextField
               type="time"

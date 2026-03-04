@@ -14,14 +14,16 @@ import {
   TableCell,
 } from "@mui/material";
 
+const {Status} = require("../constant/constant");
+
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
 
   if (!user) return <Typography sx={{ p: 2 }}>Loading...</Typography>;
 
   const getStatusColor = (status) => {
-    if (status === "ACTIVE") return "success";
-    if (status === "INACTIVE") return "error";
+    if (status === Status.ACTIVE) return "success";
+    if (status === Status.INACTIVE) return "error";
     return "warning";
   };
 
