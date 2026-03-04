@@ -84,7 +84,7 @@ const Users = () => {
 
       <Box mb={2} display="flex" justifyContent="center">
         <TextField
-          label="Search by name, email, code, role"
+          label="Search by code, name, email, role"
           variant="outlined"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

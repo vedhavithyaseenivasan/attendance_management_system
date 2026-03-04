@@ -153,8 +153,6 @@ const MarkAttendance = () => {
           >
             <MenuItem value="PRESENT">Present</MenuItem>
             <MenuItem value="ABSENT">Absent</MenuItem>
-            <MenuItem value="LATE">Late</MenuItem>
-            <MenuItem value="HALF_DAY">Half Day</MenuItem>
           </Select>
         </FormControl>
         
