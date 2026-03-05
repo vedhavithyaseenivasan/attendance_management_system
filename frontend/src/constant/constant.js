@@ -3,6 +3,13 @@ const Status = {
   INACTIVE: "INACTIVE",
 };
 
+const Roles = {
+  TEAM_MEMBER: "TEAM_MEMBER",
+  LEAD: "LEAD",
+  MANAGER: "MANAGER",
+  HR: "HR",
+};
+
 const Attendance = {
     PRESENT: "PRESENT",
     ABSENT: "ABSENT",
@@ -11,4 +18,5 @@ const Attendance = {
 module.exports = {
   Status,
   Attendance,
+  Roles,
 };
