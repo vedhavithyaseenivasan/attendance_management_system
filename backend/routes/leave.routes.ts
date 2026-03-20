@@ -1,22 +1,12 @@
 import express from "express";
-import {
-  applyLeave,
-  deleteLeave,
-  getMyLeaves,
-  getTeamLeaves,
-  updateLeaveStatus
-} from "../controllers/leave.controller";
+import {applyLeave,deleteLeave,getMyLeaves,getTeamLeaves,updateLeaveStatus} from "../controllers/leave.controller";
 
 import authenticate from "../middleware/auth.middleware";
 import roleMiddleware from "../middleware/role.middleware";
 import { Roles } from "../constants/constants";
 import { validate } from "../middleware/validate.middleware";
 
-import {
-  applyLeaveSchema,
-  leaveIdParamSchema,
-  updateLeaveStatusSchema
-} from "../validators/leave.validator";
+import {applyLeaveSchema,leaveIdParamSchema,updateLeaveStatusSchema} from "../validators/leave.validator";
 
 const router = express.Router();
 

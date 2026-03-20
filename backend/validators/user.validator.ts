@@ -4,7 +4,7 @@ import { Roles, Status } from "../constants/constants";
 export const createUserSchema = Joi.object({
   employee_code: Joi.string().required(),
 
-  name: Joi.string().min(3).max(100).required(),
+  name: Joi.string().min(3).max(50).required(),
 
   email: Joi.string().email().required(),
 

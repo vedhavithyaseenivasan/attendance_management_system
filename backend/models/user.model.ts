@@ -13,12 +13,9 @@ interface UserAttributes {
   status: "ACTIVE" | "INACTIVE";
 }
 
-interface UserCreationAttributes
-  extends Optional<UserAttributes, "id" | "team_id" | "reporting_to" | "status"> {}
+interface UserCreationAttributes extends Optional<UserAttributes, "id" | "team_id" | "reporting_to" | "status"> {}
 
-class User
-  extends Model<UserAttributes, UserCreationAttributes>
-  implements UserAttributes
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes
 {
   public id!: number;
   public employee_code!: string;

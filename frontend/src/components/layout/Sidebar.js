@@ -79,7 +79,7 @@ const Sidebar = () => {
       }}
     >
       <Toolbar />
-      
+
       <Typography
         variant="h6"
         align="left"
@@ -87,6 +87,7 @@ const Sidebar = () => {
       >
         MENU
       </Typography>
+      
       <Divider /> 
 
       <List>

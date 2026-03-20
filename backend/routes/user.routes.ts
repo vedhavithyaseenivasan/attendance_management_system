@@ -2,12 +2,7 @@ import { Router } from "express";
 import auth from "../middleware/auth.middleware";
 import role from "../middleware/role.middleware";
 import { validate } from "../middleware/validate.middleware";
-
-import {
-  getAllUsers,
-  createUser
-} from "../controllers/user.controller";
-
+import {getAllUsers,createUser} from "../controllers/user.controller";
 import { createUserSchema } from "../validators/user.validator";
 
 const router = Router();

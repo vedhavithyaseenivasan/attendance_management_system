@@ -3,11 +3,7 @@ import authenticate from "../middleware/auth.middleware";
 import { validate } from "../middleware/validate.middleware";
 import { markAttendanceSchema } from "../validators/attendance.validator";
 
-import {
-  markAttendance,
-  getAttendance,
-  updateAttendance,
-} from "../controllers/attendance.controller";
+import {markAttendance,getAttendance,updateAttendance,} from "../controllers/attendance.controller";
 
 const router = Router();
 
@@ -24,7 +20,7 @@ router.get("/", authenticate, getAttendance);
 
 //Update attendance
 router.put(
-  "/update",
+  "/",
   authenticate,
   validate({ body: markAttendanceSchema }), 
   updateAttendance

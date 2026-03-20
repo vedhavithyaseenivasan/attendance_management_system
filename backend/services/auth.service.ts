@@ -40,24 +40,24 @@ if (!JWT_SECRET) {
 export const login = async ({ email, password }: LoginParams): Promise<LoginResponse> => {
 
   if (!email || !password) {
-    const error = new Error("Email and password are required");
-    (error as any).statusCode = 400;
+    const error:any = new Error("Email and password are required");
+    error.statusCode = 400;
     throw error;
   }
 
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
-    const error = new Error("Invalid credentials");
-    (error as any).statusCode = 401;
+    const error:any = new Error("Invalid credentials");
+    error.statusCode = 401;
     throw error;
   }
 
   const isMatch = await bcrypt.compare(password, user.password_hash);
 
   if (!isMatch) {
-    const error = new Error("Invalid credentials");
-    (error as any).statusCode = 401;
+    const error:any = new Error("Invalid credentials");
+    error.statusCode = 401;
     throw error;
   }
 
@@ -87,31 +87,26 @@ export const login = async ({ email, password }: LoginParams): Promise<LoginResp
 };
 
 //CHANGE PASSWORD
-export const changePassword = async ({
-  email,
-  oldPassword,
-  newPassword,
-}: ChangePasswordParams): Promise<string> => {
-
+export const changePassword = async ({email,oldPassword,newPassword,}: ChangePasswordParams): Promise<string> => {
   if (!email || !oldPassword || !newPassword) {
-    const error = new Error("All fields are required");
-    (error as any).statusCode = 400;
+    const error:any = new Error("All fields are required");
+    error.statusCode = 400;
     throw error;
   }
 
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
-    const error = new Error("User not found");
-    (error as any).statusCode = 404;
+    const error:any= new Error("User not found");
+    error.statusCode = 404;
     throw error;
   }
 
   const isMatch = await bcrypt.compare(oldPassword, user.password_hash);
 
   if (!isMatch) {
-    const error = new Error("Old password incorrect");
-    (error as any).statusCode = 400;
+    const error:any= new Error("Old password incorrect");
+    error.statusCode = 400;
     throw error;
   }
 

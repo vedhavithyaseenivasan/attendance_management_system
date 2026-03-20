@@ -6,7 +6,8 @@ export const fetchAttendance = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       return await fetchAttendanceAPI();
-    } catch (error) {
+    }
+    catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }

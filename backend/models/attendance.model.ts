@@ -15,9 +15,7 @@ interface AttendanceAttributes {
 
 interface AttendanceCreationAttributes extends Optional<AttendanceAttributes, "id"> {}
 
-class Attendance
-  extends Model<AttendanceAttributes, AttendanceCreationAttributes>
-  implements AttendanceAttributes
+class Attendance extends Model<AttendanceAttributes, AttendanceCreationAttributes> implements AttendanceAttributes
 {
   public id!: number;
   public user_id!: number;

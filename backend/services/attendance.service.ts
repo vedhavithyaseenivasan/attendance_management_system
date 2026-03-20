@@ -3,14 +3,7 @@ import { Op } from "sequelize";
 import { Roles, Status } from "../constants/constants";
 import { logAction } from "./audit.service";
 
-type AttendanceStatus =
-  | "PRESENT"
-  | "ABSENT"
-  | "HALF_DAY"
-  | "LEAVE"
-  | "HOLIDAY"
-  | "WEEKEND";
-
+type AttendanceStatus ="PRESENT"|"ABSENT"|"HALF_DAY"|"LEAVE"|"HOLIDAY"|"WEEKEND";
 interface MarkAttendanceParams {
   user_id?: number;
   date?: string;
@@ -18,18 +11,13 @@ interface MarkAttendanceParams {
   check_in_time?: string | null;
   check_out_time?: string | null;
 }
-
 interface ServiceUser {
   id: number;
   role: string;
 }
 
-
 //MARK ATTENDANCE
-export const markAttendance = async (
-  user: ServiceUser,
-  params: MarkAttendanceParams
-): Promise<Attendance> => {
+export const markAttendance = async (user: ServiceUser,params: MarkAttendanceParams):Promise<Attendance> => {
   const { user_id, date, status, check_in_time, check_out_time } = params;
 
   let targetUserId = user.id;
@@ -51,8 +39,7 @@ export const markAttendance = async (
     throw error;
   }
 
-  const attendanceDate =
-    date || new Date().toISOString().split("T")[0];
+  const attendanceDate=date || new Date().toISOString().split("T")[0];
 
   const checkIn = check_in_time;
   const checkOut = check_out_time;
@@ -100,34 +87,25 @@ export const markAttendance = async (
   return attendance;
 };
 
-
 //UPDATE ATTENDANCE
-export const updateAttendance = async (
-  user: ServiceUser,
-  params: MarkAttendanceParams
-) => {
+export const updateAttendance = async (user: ServiceUser,params: MarkAttendanceParams) => {
   return markAttendance(user, params);
 };
 
-
 //GET ATTENDANCE
-export const getAttendance = async (
-  user: ServiceUser,
-  month?: number,
-  year?: number,
-  selfOnly = false
-) => {
+export const getAttendance = async (user: ServiceUser,month?: number,year?: number,selfOnly = false) => {
   let userIds: number[] = [];
 
   if (selfOnly || user.role === Roles.TEAM_MEMBER) {
     userIds = [user.id];
-  } else if (user.role === Roles.LEAD) {
+  }
+  else if (user.role === Roles.LEAD) {
     const members = await User.findAll({
       where: { reporting_to: user.id },
     });
-
     userIds = [user.id, ...members.map((u) => u.id)];
-  } else if (user.role === Roles.MANAGER) {
+  }
+  else if (user.role === Roles.MANAGER) {
     const leads = await User.findAll({
       where: { reporting_to: user.id, role: Roles.LEAD },
     });
@@ -142,7 +120,8 @@ export const getAttendance = async (
     });
 
     userIds = [user.id, ...leadIds, ...members.map((m) => m.id)];
-  } else if (user.role === Roles.HR) {
+  }
+  else if (user.role === Roles.HR) {
     const users = await User.findAll({ attributes: ["id"] });
     userIds = users.map((u) => u.id);
   }
@@ -171,26 +150,3 @@ export const getAttendance = async (
 
   return attendance.map((a) => a.toJSON());
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

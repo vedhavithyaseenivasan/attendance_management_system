@@ -3,7 +3,6 @@ import { Op } from "sequelize";
 import { logAction } from "./audit.service";
 import { Roles,LeaveStatus } from "../constants/constants";
 
-
 interface LeaveBody {
   from_date: string;
   to_date: string;
@@ -12,29 +11,34 @@ interface LeaveBody {
   reason: string;
 }
 
-const createError = (message: string, statusCode: number) => {
-  const error = new Error(message) as Error & { statusCode?: number };
-  error.statusCode = statusCode;
-  return error;
-};
 
 //APPLY LEAVE
 export const applyLeave = async (userId: number, body: LeaveBody) => {
   const user = await User.findByPk(userId);
-  if (!user) throw createError("User not found", 404);
+  if (!user) {
+    const error: any = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
 
   const { from_date, to_date, leave_type, half_day_type, reason } = body;
 
   if (!from_date || !to_date || !leave_type || !reason) {
-    throw createError("All fields are required", 400);
+    const error: any = new Error("All fields are required");
+    error.statusCode = 400;
+    throw error;
   }
 
   if (user.status !== "ACTIVE") {
-    throw createError("User is inactive", 403);
+    const error: any = new Error("User is inactive");
+    error.statusCode = 403;
+    throw error;
   }
 
   if (new Date(from_date) > new Date(to_date)) {
-    throw createError("Start date cannot be after end date", 400);
+    const error: any = new Error("Start date cannot be after end date");
+    error.statusCode = 400;
+    throw error;
   }
 
   const leave = await LeaveRequest.create({
@@ -69,7 +73,11 @@ export const getMyLeaves = async (userId: number) => {
 //GET TEAM LEAVES
 export const getTeamLeaves = async (userId: number) => {
   const user = await User.findByPk(userId);
-  if (!user) throw createError("User not found", 404);
+  if (!user) {
+    const error: any = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
 
   let userIds: number[] = [];
 
@@ -104,7 +112,9 @@ export const getTeamLeaves = async (userId: number) => {
   }
 
   else {
-    throw createError("Access denied", 403);
+    const error: any = new Error("Access denied");
+    error.statusCode = 403;
+    throw error;
   }
 
   return LeaveRequest.findAll({
@@ -124,21 +134,33 @@ export const updateLeaveStatus = async (
   status: LeaveStatus
 ) => {
   const user = await User.findByPk(userId);
-  if (!user) throw createError("User not found", 404);
+  if (!user) {
+    const error: any = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
 
   if (![Roles.LEAD, Roles.MANAGER].includes(user.role as Roles)) {
-    throw createError("Only Lead or Manager can approve/reject leaves", 403);
+    const error: any = new Error("Only Lead or Manager can approve/reject leaves");
+    error.statusCode = 403;
+    throw error;
   }
 
   if (![LeaveStatus.APPROVED, LeaveStatus.REJECTED].includes(status)) {
-    throw createError("Invalid leave status", 400);
+    const error: any = new Error("Invalid leave status");
+    error.statusCode = 400;
+    throw error;
   }
 
   const leave = await LeaveRequest.findByPk(leaveId, {
     include: { model: User },
   });
 
-  if (!leave) throw createError("Leave not found", 404);
+  if (!leave) {
+    const error: any = new Error("Leave not found");
+    error.statusCode = 404;
+    throw error;
+  }
 
   await leave.update({
     status: status,
@@ -161,14 +183,22 @@ export const updateLeaveStatus = async (
 export const deleteLeave = async (userId: number, leaveId: number) => {
   const leave = await LeaveRequest.findByPk(leaveId);
 
-  if (!leave) throw createError("Leave not found", 404);
+  if (!leave) {
+    const error: any = new Error("Leave not found");
+    error.statusCode = 404;
+    throw error;
+  }
 
   if (leave.user_id !== userId) {
-    throw createError("You can delete only your leave", 403);
+    const error: any = new Error("You can delete only your leave");
+    error.statusCode = 403;
+    throw error;
   }
 
   if (leave.status !== LeaveStatus.APPLIED) {
-    throw createError("Only applied leave can be deleted", 400);
+    const error: any = new Error("Only applied leave can be deleted");
+    error.statusCode = 400;
+    throw error;
   }
 
   await leave.destroy();

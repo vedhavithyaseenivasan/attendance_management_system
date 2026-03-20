@@ -14,5 +14,5 @@ router.post("/mark", auth_middleware_1.default, (0, validate_middleware_1.valida
 //Get attendance
 router.get("/", auth_middleware_1.default, attendance_controller_1.getAttendance);
 //Update attendance
-router.put("/update", auth_middleware_1.default, (0, validate_middleware_1.validate)({ body: attendance_validator_1.markAttendanceSchema }), attendance_controller_1.updateAttendance);
+router.put("/", auth_middleware_1.default, (0, validate_middleware_1.validate)({ body: attendance_validator_1.markAttendanceSchema }), attendance_controller_1.updateAttendance);
 exports.default = router;

@@ -65,7 +65,7 @@ const UpdateAttendance = () => {
       };
 
       const res = await axios.put(
-        "http://localhost:5000/api/attendance/update", // call update endpoint
+        "http://localhost:5000/api/attendance", // call update endpoint
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );

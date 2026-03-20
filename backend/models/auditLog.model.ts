@@ -11,12 +11,8 @@ interface AuditLogAttributes {
   timestamp: Date;
 }
 
-interface AuditLogCreationAttributes
-  extends Optional<AuditLogAttributes, "id" | "timestamp"> {}
-
-class AuditLog
-  extends Model<AuditLogAttributes, AuditLogCreationAttributes>
-  implements AuditLogAttributes
+interface AuditLogCreationAttributes extends Optional<AuditLogAttributes, "id" | "timestamp"> {}
+class AuditLog extends Model<AuditLogAttributes, AuditLogCreationAttributes> implements AuditLogAttributes
 {
   public id!: number;
   public user_id?: number;

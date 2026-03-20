@@ -11,9 +11,7 @@ interface HolidayAttributes {
 
 interface HolidayCreationAttributes extends Optional<HolidayAttributes, "id"> {}
 
-class Holiday
-  extends Model<HolidayAttributes, HolidayCreationAttributes>
-  implements HolidayAttributes
+class Holiday extends Model<HolidayAttributes, HolidayCreationAttributes> implements HolidayAttributes
 {
   public id!: number;
   public date!: string;

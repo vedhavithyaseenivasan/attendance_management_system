@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
-import {
-  getAllUsers as getAllUsersService,
-  createUser as createUserService,
-} from "../services/user.service";
+import {getAllUsers as getAllUsersService,createUser as createUserService,} from "../services/user.service";
 import { asyncHandler } from "../middleware/asyncHandler";
 
 //GET ALL USERS

@@ -8,11 +8,8 @@ const drawerWidth = 240;
 const MainLayout = () => {
   return (
     <Box sx={{ display: "flex" }}>
-
       <Navbar />
-
       <Sidebar drawerWidth={drawerWidth} />
-
       <Box
         component="main"
         sx={{
@@ -22,7 +19,6 @@ const MainLayout = () => {
         }}
       >
         <Toolbar />
-
         <Outlet />
       </Box>
     </Box>

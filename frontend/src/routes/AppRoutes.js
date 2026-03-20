@@ -3,26 +3,26 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import ChangePassword from "../pages/ChangePassword";
 
-//Attendance pages
+//Attendance
 import MyAttendance from "../pages/MyAttendance"; 
 import MarkAttendance from "../pages/MarkAttendance";
 import TeamAttendance  from "../pages/TeamAttendance";
 import UpdateAttendance from "../pages/UpdateAttendance";
 
-//Holiday pages
+//Holiday
 import Holiday from "../pages/Holidays";
 import AddHoliday from "../pages/AddHoliday";
 
-//User page
+//User
 import Users from "../pages/Users";
 import AddUser from "../pages/AddUser";
 
-//Leave pages
+//Leave
 import ApplyLeave from "../pages/ApplyLeave";
 import MyLeaves from "../pages/MyLeaves";
 import ApproveLeaves from "../pages/ApproveLeaves";
 
-//Layout & route protection
+//Layout and route
 import ProtectedRoute from "../components/ProtectedRoute";
 import MainLayout from "../components/layout/MainLayout";
 
@@ -42,7 +42,6 @@ const AppRoutes = () => {
       >
 
         <Route path="/dashboard" element={<Dashboard />} />
-
         <Route
           path="/myattendance"
           element={
@@ -51,30 +50,30 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-         <Route
-  path="/team-attendance"
-  element={
-    <ProtectedRoute roles={["LEAD", "MANAGER","HR"]}>
-      <TeamAttendance />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/attendance"
-  element={
-    <ProtectedRoute roles={["HR"]}>
-      <MarkAttendance />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/update-attendance"
-  element={
-    <ProtectedRoute roles={["HR"]}>
-      <UpdateAttendance />
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/team-attendance"
+          element={
+            <ProtectedRoute roles={["LEAD", "MANAGER","HR"]}>
+              <TeamAttendance />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance"
+          element={
+            <ProtectedRoute roles={["HR"]}>
+              <MarkAttendance />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/update-attendance"
+          element={
+            <ProtectedRoute roles={["HR"]}>
+              <UpdateAttendance />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/leave/apply"
           element={
@@ -83,7 +82,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/leave/my-leaves"
           element={
@@ -92,16 +90,14 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-        
-<Route
-  path="/leave/approve"
-  element={
-    <ProtectedRoute roles={["LEAD", "MANAGER"]}>
-      <ApproveLeaves />
-    </ProtectedRoute>
-  }
-/>
-
+        <Route
+          path="/leave/approve"
+          element={
+            <ProtectedRoute roles={["LEAD", "MANAGER"]}>
+              <ApproveLeaves />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/holiday"
           element={
@@ -111,15 +107,13 @@ const AppRoutes = () => {
           }
         />
         <Route
-  path="/holiday/add"
-  element={
-    <ProtectedRoute roles={["HR"]}>
-      <AddHoliday />
-    </ProtectedRoute>
-  }
-/>
-
-
+          path="/holiday/add"
+          element={
+            <ProtectedRoute roles={["HR"]}>
+              <AddHoliday />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/users"
           element={
@@ -128,15 +122,14 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
         <Route
-  path="/users/create"
-  element={
-    <ProtectedRoute roles={["HR"]}>
-      <AddUser />
-    </ProtectedRoute>
-  }
-/>
+          path="/users/create"
+          element={
+            <ProtectedRoute roles={["HR"]}>
+              <AddUser />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       <Route path="/" element={<Navigate to="/login" replace />} />

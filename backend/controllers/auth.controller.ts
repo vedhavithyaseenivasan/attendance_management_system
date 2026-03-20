@@ -19,11 +19,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 export const changePassword = asyncHandler(async (req: Request, res: Response) => {
   const { email, oldPassword, newPassword } = req.body;
 
-  const result = await authService.changePassword({
-    email,
-    oldPassword,
-    newPassword,
-  });
+  const result = await authService.changePassword({email,oldPassword,newPassword,});
 
   res.status(200).json({
     success: true,
