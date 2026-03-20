@@ -1,3 +1,4 @@
+// src/pages/Users.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -31,11 +32,21 @@ const Users = () => {
         const res = await axios.get("http://localhost:5000/api/users", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUsers(res.data);
-        setFilteredUsers(res.data);
+
+        const usersArray = res.data.data || res.data;
+        if (!Array.isArray(usersArray)) {
+          throw new Error("Invalid response from server");
+        }
+
+        setUsers(usersArray);
+        setFilteredUsers(usersArray);
       } catch (err) {
         console.error("Failed to fetch users:", err);
-        alert(err.response?.data?.message || "Failed to fetch users");
+        alert(
+          (err.response && err.response.data && err.response.data.message) ||
+            err.message ||
+            "Failed to fetch users"
+        );
       } finally {
         setLoading(false);
       }
@@ -47,10 +58,11 @@ const Users = () => {
   useEffect(() => {
     const filtered = users.filter(
       (u) =>
-        u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.employee_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.role.toLowerCase().includes(searchTerm.toLowerCase())
+        (u.name && u.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (u.email && u.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (u.employee_code &&
+          u.employee_code.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (u.role && u.role.toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setFilteredUsers(filtered);
     setPage(0);
@@ -72,13 +84,15 @@ const Users = () => {
       </Box>
     );
   }
- 
+
   return (
     <Box p={3}>
-      <Typography variant="h4"
-          align="center"
-          gutterBottom
-          sx={{ fontWeight: "bold", color: "#1976d2" }}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ fontWeight: "bold", color: "#1976d2" }}
+      >
         Users Details
       </Typography>
 
@@ -97,41 +111,38 @@ const Users = () => {
           <Table>
             <TableHead>
               <TableRow>
-                {[
-                  "Employee Code",
-                  "Name",
-                  "Email",
-                  "Role",
-                  "Team ID",
-                  "Status",
-                ].map((header) => (
-                  <TableCell
-                    key={header}
-                    sx={{
-                      backgroundColor: "#007BFF", // MUI blue
-                      color: "#fff",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                    }}
-                  >
-                    {header}
-                  </TableCell>
-                ))}
+                {["Employee Code", "Name", "Email", "Role", "Team ID", "Status"].map(
+                  (header) => (
+                    <TableCell
+                      key={header}
+                      sx={{
+                        backgroundColor: "#007BFF",
+                        color: "#fff",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                    >
+                      {header}
+                    </TableCell>
+                  )
+                )}
               </TableRow>
             </TableHead>
+
             <TableBody>
-              {filteredUsers
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((u) => (
-                  <TableRow key={u.id} hover>
-                    <TableCell align="center">{u.employee_code}</TableCell>
-                    <TableCell align="center">{u.name}</TableCell>
-                    <TableCell align="center">{u.email}</TableCell>
-                    <TableCell align="center">{u.role}</TableCell>
-                    <TableCell align="center">{u.team_id || "-"}</TableCell>
-                    <TableCell align="center">{u.status}</TableCell>
-                  </TableRow>
-                ))}
+              {filteredUsers &&
+                filteredUsers
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((u) => (
+                    <TableRow key={u.id} hover>
+                      <TableCell align="center">{u.employee_code}</TableCell>
+                      <TableCell align="center">{u.name}</TableCell>
+                      <TableCell align="center">{u.email}</TableCell>
+                      <TableCell align="center">{u.role}</TableCell>
+                      <TableCell align="center">{u.team_id ?? "-"}</TableCell>
+                      <TableCell align="center">{u.status}</TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -139,7 +150,7 @@ const Users = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, 50]}
           component="div"
-          count={filteredUsers.length}
+          count={filteredUsers?.length || 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

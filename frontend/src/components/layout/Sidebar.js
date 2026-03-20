@@ -64,6 +64,7 @@ const Sidebar = () => {
     menuItems.push({ name: "Add Holiday", path: "/holiday/add" });
     menuItems.push({ name: "Holidays", path: "/holiday" });
     menuItems.push({ name: "Users", path: "/users" });
+    menuItems.push({ name: "Add User", path: "/users/create" });
   }
 
   return (

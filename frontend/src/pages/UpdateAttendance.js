@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import moment from 'moment';
 import {
   Box,
   Typography,
@@ -24,7 +25,7 @@ const UpdateAttendance = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  //Fetch users for HR dropdown
+  //Fetch users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -63,7 +64,7 @@ const UpdateAttendance = () => {
         check_out_time: status === "PRESENT" ? checkOutTime : null,
       };
 
-      const res = await axios.post(
+      const res = await axios.put(
         "http://localhost:5000/api/attendance/update", // call update endpoint
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -84,6 +85,16 @@ const UpdateAttendance = () => {
     }
   };
 
+  const handleChange=(e)=>{
+    const formattedVal=moment(e.target.value,'HH:mm').format('HH:mm:ss');
+    setCheckInTime(formattedVal)
+  }
+
+  const handleChange2=(e)=>{
+    const formattedVal=moment(e.target.value,'HH:mm').format('HH:mm:ss');
+    setCheckOutTime(formattedVal)
+  }
+
   return (
     <Box
       p={3}
@@ -91,7 +102,7 @@ const UpdateAttendance = () => {
       justifyContent="center"
       alignItems="center"
       minHeight="80vh"
-      bgcolor="#f9f9f9"
+      bgcolor="#ffffff"
     >
       <Paper
         elevation={6}
@@ -168,7 +179,7 @@ const UpdateAttendance = () => {
               type="time"
               label="Check-in Time"
               value={checkInTime}
-              onChange={(e) => setCheckInTime(e.target.value)}
+              onChange={handleChange}
               fullWidth
               sx={{ mb: 3 }}
               InputLabelProps={{ shrink: true }}
@@ -177,7 +188,7 @@ const UpdateAttendance = () => {
               type="time"
               label="Check-out Time"
               value={checkOutTime}
-              onChange={(e) => setCheckOutTime(e.target.value)}
+              onChange={handleChange2}
               fullWidth
               sx={{ mb: 3 }}
               InputLabelProps={{ shrink: true }}

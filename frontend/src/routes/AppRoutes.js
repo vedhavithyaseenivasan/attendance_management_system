@@ -15,6 +15,7 @@ import AddHoliday from "../pages/AddHoliday";
 
 //User page
 import Users from "../pages/Users";
+import AddUser from "../pages/AddUser";
 
 //Leave pages
 import ApplyLeave from "../pages/ApplyLeave";
@@ -127,6 +128,15 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+  path="/users/create"
+  element={
+    <ProtectedRoute roles={["HR"]}>
+      <AddUser />
+    </ProtectedRoute>
+  }
+/>
       </Route>
 
       <Route path="/" element={<Navigate to="/login" replace />} />

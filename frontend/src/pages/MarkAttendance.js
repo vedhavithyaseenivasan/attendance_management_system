@@ -14,8 +14,7 @@ import {
   Paper,
 } from "@mui/material";
 
-
-const {Attendance} = require("../constant/constant");
+const { Attendance } = require("../constant/constant");
 
 const MarkAttendance = () => {
   const [users, setUsers] = useState([]);
@@ -28,19 +27,26 @@ const MarkAttendance = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/users", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUsers(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
     fetchUsers();
   }, []);
+
+  // Fetch users
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get("http://localhost:5000/api/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Users API:", res.data);
+
+      setUsers(res.data.data || []);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      setUsers([]);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!selectedUser || !date || !status) {
@@ -54,6 +60,7 @@ const MarkAttendance = () => {
     }
 
     setLoading(true);
+
     try {
       const token = localStorage.getItem("token");
 
@@ -79,6 +86,7 @@ const MarkAttendance = () => {
       setCheckInTime("");
       setCheckOutTime("");
     } catch (err) {
+      console.error(err);
       setMessage(err.response?.data?.message || "Failed to mark attendance");
     } finally {
       setLoading(false);
@@ -92,7 +100,7 @@ const MarkAttendance = () => {
       justifyContent="center"
       alignItems="center"
       minHeight="80vh"
-      bgcolor="#f9f9f9"
+      bgcolor="#ffffff"
     >
       <Paper
         elevation={6}
@@ -113,11 +121,7 @@ const MarkAttendance = () => {
         </Typography>
 
         {message && (
-          <Alert
-            severity="success"
-            sx={{ mb: 3 }}
-            onClose={() => setMessage("")}
-          >
+          <Alert severity="success" sx={{ mb: 3 }} onClose={() => setMessage("")}>
             {message}
           </Alert>
         )}
@@ -129,11 +133,12 @@ const MarkAttendance = () => {
             onChange={(e) => setSelectedUser(e.target.value)}
             label="User"
           >
-            {users.map((u) => (
-              <MenuItem key={u.id} value={u.id}>
-                {u.name} ({u.role})
-              </MenuItem>
-            ))}
+            {Array.isArray(users) &&
+              users.map((u) => (
+                <MenuItem key={u.id} value={u.id}>
+                  {u.name} ({u.role})
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
 
@@ -158,7 +163,7 @@ const MarkAttendance = () => {
             <MenuItem value="ABSENT">Absent</MenuItem>
           </Select>
         </FormControl>
-        
+
         {status === Attendance.PRESENT && (
           <>
             <TextField
